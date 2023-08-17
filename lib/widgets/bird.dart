@@ -29,14 +29,15 @@ class _BirdState extends State<Bird> {
             onTap: _handleTap,
             child: Container(
                 color: Colors.transparent,
-                child: Center(
+                child: Container(
+                  alignment: Alignment.centerLeft,
                   child: Transform.translate(
-                    offset: Offset(0, _dy),
+                    offset: Offset(200, _dy),
                     child: Container(
                       key: _key,
                       color: Colors.red,
-                      height: 50,
-                      width: 75,
+                      height: 32,
+                      width: 55,
                     ),
                   ),
                 ))));
