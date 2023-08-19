@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Bird extends StatefulWidget {
-  const Bird({super.key});
+  const Bird({super.key, this.onMoved});
+  final void Function(RenderBox?)? onMoved;
 
   @override
   State<Bird> createState() => _BirdState();
@@ -70,6 +71,9 @@ class _BirdState extends State<Bird> {
       setState(() {
         _dy += 0.98 * _time;
       });
+
+      widget.onMoved
+          ?.call(_key.currentContext?.findRenderObject() as RenderBox?);
 
       await Future.delayed(const Duration(milliseconds: 1));
     }
