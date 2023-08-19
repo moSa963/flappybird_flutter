@@ -20,11 +20,7 @@ class _BirdState extends State<Bird> {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-        bottom: 0,
-        left: 0,
-        right: 0,
-        top: 0,
+    return Positioned.fill(
         child: GestureDetector(
             onTap: _handleTap,
             child: Container(
@@ -32,15 +28,25 @@ class _BirdState extends State<Bird> {
                 child: Container(
                   alignment: Alignment.centerLeft,
                   child: Transform.translate(
-                    offset: Offset(200, _dy),
-                    child: Container(
-                      key: _key,
-                      color: Colors.red,
-                      height: 32,
-                      width: 55,
-                    ),
+                    offset: Offset(75, _dy),
+                    child: _birdBody(),
                   ),
                 ))));
+  }
+
+  Widget _birdBody() {
+    return Transform.rotate(
+      angle: _angle(),
+      child: Container(
+        key: _key,
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("lib/assets/images/bird.png"),
+                fit: BoxFit.fill)),
+        height: 35,
+        width: 50,
+      ),
+    );
   }
 
   void _handleTap() {
@@ -53,21 +59,18 @@ class _BirdState extends State<Bird> {
     });
   }
 
+  double _angle() {
+    return _time < 3 ? _time / 4 : 1;
+  }
+
   void _start() async {
     while (_active) {
       _time += 0.01;
+
       setState(() {
-        _dy += (9.8 * _time) * 0.1;
+        _dy += 0.98 * _time;
       });
 
-      final d = _key.currentContext?.findRenderObject() as RenderBox?;
-
-      if (d != null) {
-        print(d.localToGlobal(Offset.zero).dy);
-      } else {
-        print(null);
-      }
-      
       await Future.delayed(const Duration(milliseconds: 1));
     }
   }
