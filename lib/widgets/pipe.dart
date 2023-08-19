@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
@@ -34,15 +33,9 @@ class _PipeState extends State<Pipe> {
           child: Column(
             children: [
               Expanded(
-                  flex: _gap,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage("lib/assets/images/pipe_head.png"),
-                          fit: BoxFit.fitWidth,
-                          alignment: Alignment.bottomCenter),
-                    ),
-                  )),
+                flex: _gap,
+                child: _pipe(),
+              ),
               const SizedBox(
                 height: 160,
               ),
@@ -51,20 +44,32 @@ class _PipeState extends State<Pipe> {
                   child: Transform.flip(
                     flipX: true,
                     flipY: true,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                            image:
-                                AssetImage("lib/assets/images/pipe_head.png"),
-                            fit: BoxFit.fitWidth,
-                            alignment: Alignment.bottomCenter),
-                      ),
-                    ),
+                    child: _pipe(),
                   )),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _pipe() {
+    return Column(
+      children: [
+        Expanded(
+          child: Image.asset(
+            "lib/assets/images/pipe_body.png",
+            fit: BoxFit.fitWidth,
+            width: Pipe.width,
+            repeat: ImageRepeat.repeatY,
+          ),
+        ),
+        Image.asset(
+          "lib/assets/images/pipe_head.png",
+          fit: BoxFit.fitWidth,
+          width: Pipe.width,
+        ),
+      ],
     );
   }
 }
