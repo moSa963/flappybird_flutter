@@ -62,6 +62,7 @@ flutter:
   assets:
     - lib/assets/images/background.png
     - lib/assets/images/pipe_head.png
+    - lib/assets/images/pipe_body.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
