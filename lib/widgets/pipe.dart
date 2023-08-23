@@ -1,23 +1,28 @@
 import 'dart:math';
 
+import 'package:flappybird_flutter/models/box_model.dart';
 import 'package:flutter/material.dart';
 
 class Pipe extends StatefulWidget {
-  const Pipe({super.key, required this.offset});
+  const Pipe({super.key, required this.offset, this.onChange});
   static double width = 75;
   final double offset;
+  final void Function(BoxModel pipBox)? onChange;
 
   @override
   State<Pipe> createState() => _PipeState();
 }
 
 class _PipeState extends State<Pipe> {
-  int _gap = 0;
+  int _gap = 50;
 
   @override
   void initState() {
     super.initState();
-    _gap = 10 + Random().nextInt(80);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _gap = 10 + Random().nextInt(80);
+    });
   }
 
   @override
@@ -36,8 +41,16 @@ class _PipeState extends State<Pipe> {
                 flex: _gap,
                 child: _pipe(),
               ),
-              const SizedBox(
-                height: 160,
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  widget.onChange?.call(BoxModel.fromRenderBox(
+                      context.findRenderObject() as RenderBox));
+
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 500),
+                    height: _gap == 50 ? 0 : 160,
+                  );
+                },
               ),
               Expanded(
                   flex: 100 - _gap,
