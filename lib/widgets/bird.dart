@@ -1,8 +1,11 @@
+import 'package:flappybird_flutter/models/box_model.dart';
 import 'package:flutter/material.dart';
 
 class Bird extends StatefulWidget {
-  const Bird({super.key, this.onMoved});
-  final void Function(RenderBox?)? onMoved;
+  const Bird({super.key, this.onMoved, required this.active, this.onTap});
+  final void Function(BoxModel? birdBox)? onMoved;
+  final bool active;
+  final void Function()? onTap;
 
   @override
   State<Bird> createState() => _BirdState();
@@ -11,12 +14,18 @@ class Bird extends StatefulWidget {
 class _BirdState extends State<Bird> {
   final _key = GlobalKey();
   double _dy = 0;
-  bool _active = false;
   double _time = 0;
 
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant Bird oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.active) return;
+    _start();
   }
 
   @override
@@ -51,11 +60,8 @@ class _BirdState extends State<Bird> {
   }
 
   void _handleTap() {
+    widget.onTap?.call();
     setState(() {
-      if (!_active) {
-        _active = true;
-        _start();
-      }
       _time = -1.2;
     });
   }
@@ -65,15 +71,15 @@ class _BirdState extends State<Bird> {
   }
 
   void _start() async {
-    while (_active) {
+    while (widget.active) {
       _time += 0.01;
 
       setState(() {
         _dy += 0.98 * _time;
       });
 
-      widget.onMoved
-          ?.call(_key.currentContext?.findRenderObject() as RenderBox?);
+      widget.onMoved?.call(BoxModel.fromRenderBox(
+          _key.currentContext?.findRenderObject() as RenderBox));
 
       await Future.delayed(const Duration(milliseconds: 1));
     }
