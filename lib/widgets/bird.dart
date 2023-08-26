@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flappybird_flutter/models/box_model.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +17,7 @@ class _BirdState extends State<Bird> {
   final _key = GlobalKey();
   double _dy = 0;
   double _time = 0;
+  Timer? _timer;
 
   @override
   void initState() {
@@ -71,17 +74,22 @@ class _BirdState extends State<Bird> {
   }
 
   void _start() async {
-    while (widget.active) {
-      _time += 0.01;
+    if (_timer != null) return;
+
+    DateTime last = DateTime.now();
+
+    _timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
+      int dt = DateTime.now().difference(last).inMilliseconds;
 
       setState(() {
-        _dy += 0.98 * _time;
+        _time += 0.004 * dt;
+        _dy += 0.392 * dt * _time;
       });
+
+      last = DateTime.now();
 
       widget.onMoved?.call(BoxModel.fromRenderBox(
           _key.currentContext?.findRenderObject() as RenderBox));
-
-      await Future.delayed(const Duration(milliseconds: 1));
-    }
+    });
   }
 }
