@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flappybird_flutter/models/box_model.dart';
+import 'package:flappybird_flutter/widgets/pipe_gap.dart';
 import 'package:flutter/material.dart';
 
 class Pipe extends StatefulWidget {
@@ -41,17 +42,7 @@ class _PipeState extends State<Pipe> {
                 flex: _gap,
                 child: _pipe(),
               ),
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  widget.onChange?.call(BoxModel.fromRenderBox(
-                      context.findRenderObject() as RenderBox));
-
-                  return AnimatedContainer(
-                    duration: const Duration(milliseconds: 500),
-                    height: _gap == 50 ? 0 : 160,
-                  );
-                },
-              ),
+              const PipeGap(),
               Expanded(
                   flex: 100 - _gap,
                   child: Transform.flip(
