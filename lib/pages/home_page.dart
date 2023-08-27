@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> {
       clipBehavior: Clip.none,
       child: Stack(
         children: [
-          Background(),
+          const Background(),
           PipesSheet(
             active: active,
             onChange: (box, pipe) {
@@ -41,26 +41,31 @@ class _HomePageState extends State<HomePage> {
               });
             },
             active: active,
-            onMoved: (birdBox) {
-              if (birdBox!.bottom > box!.bottom || birdBox!.top < box!.top) {
-                setState(() {
-                  active = false;
-                });
-              }
-
-              if (gap == null) return;
-
-              if (birdBox.right >= gap!.left && birdBox.left < gap!.right) {
-                if (birdBox.top < gap!.top || birdBox.bottom > gap!.bottom) {
-                  setState(() {
-                    active = false;
-                  });
-                }
-              }
-            },
+            onMoved: _handleBirdMoved,
           ),
         ],
       ),
     ));
+  }
+
+  bool _testFrameCollision(BoxModel? birdBox) {
+    if (birdBox == null || box == null) return false;
+
+    return birdBox.bottom > box!.bottom || birdBox.top < box!.top;
+  }
+
+  bool _testPipeCollision(BoxModel? birdBox) {
+    if (birdBox == null || gap == null) return false;
+
+    return (birdBox.right >= gap!.left && birdBox.left < gap!.right) &&
+        (birdBox.top < gap!.top || birdBox.bottom > gap!.bottom);
+  }
+
+  void _handleBirdMoved(BoxModel? birdBox) {
+    if (!_testFrameCollision(birdBox) && !_testPipeCollision(birdBox)) return;
+
+    setState(() {
+      active = false;
+    });
   }
 }
