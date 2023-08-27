@@ -10,16 +10,36 @@ class PipeGap extends StatefulWidget {
 }
 
 class _PipeGapState extends State<PipeGap> {
+  double _height = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _start();
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        widget.onChange?.call(
-            BoxModel.fromRenderBox(context.findRenderObject() as RenderBox));
-        return Container(
-          height: 160,
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          widget.onChange?.call(
+              BoxModel.fromRenderBox(context.findRenderObject() as RenderBox));
+        });
+        return AnimatedSize(
+          duration: const Duration(seconds: 1),
+          child: SizedBox(
+            height: _height,
+          ),
         );
       },
     );
+  }
+
+  void _start() async {
+    await Future.delayed(const Duration(microseconds: 100));
+    setState(() {
+      _height = 120;
+    });
   }
 }
