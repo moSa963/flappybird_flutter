@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 
 class Bird extends StatefulWidget {
   const Bird({super.key, this.onMoved, required this.active, this.onTap});
-  final void Function(BoxModel? birdBox)? onMoved;
   final bool active;
+  final void Function(BoxModel? birdBox)? onMoved;
   final void Function()? onTap;
 
   @override
@@ -20,15 +20,14 @@ class _BirdState extends State<Bird> {
   Timer? _timer;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   void didUpdateWidget(covariant Bird oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.active) return;
-    _start();
+
+    if (!oldWidget.active) {
+      _start();
+    } else {
+      _reset();
+    }
   }
 
   @override
@@ -73,12 +72,12 @@ class _BirdState extends State<Bird> {
     return _time < 3 ? _time / 4 : 1;
   }
 
-  void _start() async {
-    if (_timer != null) return;
+  void _start() {
+    if (_timer?.isActive ?? false) return;
 
     DateTime last = DateTime.now();
 
-    _timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
+    _timer = Timer.periodic(const Duration(milliseconds: 5), (timer) {
       int dt = DateTime.now().difference(last).inMilliseconds;
 
       setState(() {
@@ -90,6 +89,14 @@ class _BirdState extends State<Bird> {
 
       widget.onMoved?.call(BoxModel.fromRenderBox(
           _key.currentContext?.findRenderObject() as RenderBox));
+    });
+  }
+
+  void _reset() {
+    setState(() {
+      _timer?.cancel();
+      _dy = 0;
+      _time = 0;
     });
   }
 }
