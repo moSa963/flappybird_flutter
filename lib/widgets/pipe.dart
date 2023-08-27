@@ -42,7 +42,7 @@ class _PipeState extends State<Pipe> {
                 flex: _gap,
                 child: _pipe(),
               ),
-              const PipeGap(),
+              PipeGap(onChange: widget.onChange),
               Expanded(
                   flex: 100 - _gap,
                   child: Transform.flip(
